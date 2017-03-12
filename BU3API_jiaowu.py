@@ -11,7 +11,7 @@ class JiaoWu_Notice():#该类的对象分别对应不同的新闻
             page_temp=requests.get(notice_url)
             self.bsobj=BeautifulSoup(page_temp.text,'lxml')
         except:
-            print "ERROR(xwid=%4d):打开页面错误"%xwid
+            print "ERROR:打开页面错误"
     def get_info(self):#该方法得到一个有三项的列表，分别存储标题，日期和发布单位 
         '''Input a bsobj of News page
         Return a list:
