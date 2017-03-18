@@ -9,17 +9,17 @@ import os
 class BoYa_Notice():
     def __init__(self,url):
         try:
-            page_temp=requests(url)
+            page_temp=requests.get(url)
             self.bsobj=BeautifulSoup(page_temp.text,'lxml')
         except:
             print "ERROR:打开页面错误"
     def get_info(self):
         out=[]
-        tag=self.bsobj.find(class_='lbl_newstitle')#标题
+        tag=self.bsobj.find(id='lbl_newstitle')#标题
         out.append(tag.string)
-        tag=self.bsobj.find(class_='lbl_visit')#点击量
+        tag=self.bsobj.find(id='lbl_visit')#点击量
         out.append(tag.string)
-        tag=self.bsobj.find(class_='lbl_date')#时间
+        tag=self.bsobj.find(id='lbl_date')#时间
         out.append(tag.string)
         return out
     def get_page(self):
@@ -43,12 +43,10 @@ def BoYa_get_url(subsection):#返回课程预告和课程新闻两个模块的�
                     if isinstance(td,bs4.element.Tag) and td.name=='td':
                         for a in td:
                             if isinstance(a,bs4.element.Tag) and a.name=='a':
-                                if a.has_key('href'):
+                                if a.has_attr('href'):
                                     if  a['href'].find('javascript')==-1:
-                                        out.append('bykt.buaa.edu.cn/'+a['href'])
+                                        out.append('http://bykt.buaa.edu.cn/'+a['href'])
     return out
-
-
         
     
 

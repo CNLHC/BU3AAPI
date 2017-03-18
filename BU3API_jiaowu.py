@@ -67,5 +67,3 @@ def JiaoWu_get_url(subsection='tzgg',pagenum='1'):
             xwid=re.search(pattern,child.prettify())
             out.append('http://jiaowu.buaa.edu.cn/bhjwc2.0/index/newsView.do?xwid='+xwid.group(1))
     return out
-
-        
