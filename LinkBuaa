@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+# -*-code:utf-8 -*-
+import urllib
+import ssl
+import urllib2
+import base64
+import time
+
+class login:
+    def auto_login(self,Username,Password):
+        self.Url = 'https://gw.buaa.edu.cn:803/include/auth_action.php'
+        Password=base64.b64encode(Password)
+        L=list(Password)
+        for a in range(len(L)):
+           if L[a]=='=':
+               L[a]='%3D'
+        Password=''.join(L)
+        for acid in range(20,25):
+            Data = 'action=login&username='+Username+'&password={B}'+Password+'&ac_id='+str(acid)+'&user_ip=&nas_ip=&user_mac=&save_me=1&ajax=1'
+            request = urllib2.Request(url=self.Url,data=Data)
+            context=ssl._create_unverified_context()
+            response = urllib2.urlopen(request,context=context)
+            S=response.read()
+            print S
+            if S.find("login_ok")==0:
+                return 1
+        for acid in range(10,20):
+            Data = 'action=login&username='+Username+'&password={B}'+Password+'&ac_id='+str(acid)+'&user_ip=&nas_ip=&user_mac=&save_me=1&ajax=1'
+            request = urllib2.Request(url=self.Url,data=Data)
+            response = urllib2.urlopen(request)
+            S=response.read()
+            print S
+            if S.find("login_ok")==0:
+                return 1
+        for acid in range(0,10):
+            Data = 'action=login&username='+Username+'&password={B}'+Password+'&ac_id='+str(acid)+'&user_ip=&nas_ip=&user_mac=&save_me=1&ajax=1'
+            request = urllib2.Request(url=self.Url,data=Data)
+            response = urllib2.urlopen(request)
+            S=response.read()
+            print S
+            if S.find("login_ok")==0:
+                return 1
+        return None 
+
+#####################################################
+Buaa = login()
+if Buaa.auto_login(Username='16231275',Password='lhc8848444')==None :
+    print "Login Failed"
+    
+
+print time.asctime( time.localtime(time.time()) )

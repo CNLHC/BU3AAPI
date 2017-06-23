@@ -14,24 +14,29 @@ class JiaoWu_Notice():#该类的对象分别对应不同的新闻
             print "ERROR:打开页面错误"
     def get_info(self):#该方法得到一个有三项的列表，分别存储标题，日期和发布单位 
         '''Input a bsobj of News page
-        Return a list:
-        first item is title
-        second item is date
+        Return a dict:
+        keylist=['Title','Date','Author','Apart']
         third item is department '''
-        out=[]
+        out={}
+        keylist=['Date','Author','Apart','Title']#Please make "Title" The Last one,Because it do not need pattern
+        pattern=[]
+        pattern.append(re.compile("(\d{4}-\d{2}-\d{2})"))
+        pattern.append(re.compile("发布者:(.*)\s*所属科室"))
+        pattern.append(re.compile("所属科室:(.*?)\s"))
         tag=self.bsobj.find(class_="search_con mt20 text_cen font18 blue LH36 font_hei")
-        out.append(tag.string)
+        out[keylist[3]]=tag.string.encode("utf-8")
         tag=tag.next_sibling.next_sibling
-        str_temp=tag.string.strip().split(' ')
-        out.append((str_temp[0].split(':'))[-1])
-        out.append((str_temp[-1].split(':'))[-1])
+        for i in range(0,3):
+            t_reobj=re.search(pattern[i],tag.string.encode('utf-8'))
+            if t_reobj !=None:
+                out[keylist[i]]=(t_reobj.group(1))
+            else:
+                out[keylist[i]]='NULL'
         return out
     def get_page(self):
-        ''' Get a copy of News,the copy will be named as '[xwid].html'and stored in the './.NoticeCopy/'''
-        tag=self.bsobj.find(class_="search_con mt20 LH20 fontcolor")
+        ''' Get a copy of News page'''
+        tag=self.bsobj
         return tag.prettify()
-
-
 #note:北航教务的网站是动态生成的
 #获得列表需要用post方法提交一份表单
 #其中比较关键的参数是fcdTab:
@@ -40,7 +45,6 @@ class JiaoWu_Notice():#该类的对象分别对应不同的新闻
 #05:下载专区
 #08:公式专区
 #06:服务中心
-
 def JiaoWu_get_url(subsection='tzgg',pagenum='1'):
     out=[]
     post_dict={
